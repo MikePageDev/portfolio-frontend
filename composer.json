@@ -1,0 +1,52 @@
+{
+    "name": "mikepagedev/portfolio-frontend",
+    "description": "Public portfolio and case-study pages for mikepagedev/filament-portfolio.",
+    "type": "library",
+    "license": "MIT",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/mikepagedev/filament-portfolio"
+        }
+    ],
+    "require": {
+        "php": "^8.5",
+        "mikepagedev/filament-portfolio": "@dev",
+        "illuminate/support": "^13.0",
+        "spatie/laravel-package-tools": "^1.9"
+    },
+    "require-dev": {
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.27",
+        "orchestra/testbench": "^11.0",
+        "phpunit/phpunit": "^12.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "MikePageDev\\PortfolioFrontend\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "MikePageDev\\PortfolioFrontend\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "MikePageDev\\PortfolioFrontend\\PortfolioFrontendServiceProvider"
+            ]
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "stan": "phpstan analyse --memory-limit=512M",
+        "lint": "pint --test",
+        "check": [
+            "@test",
+            "@stan",
+            "@lint"
+        ]
+    },
+    "minimum-stability": "stable"
+}
