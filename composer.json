@@ -6,7 +6,8 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/mikepagedev/filament-portfolio"
+            "url": "https://github.com/mikepagedev/filament-portfolio",
+            "no-api": true
         }
     ],
     "require": {
@@ -19,7 +20,8 @@
         "larastan/larastan": "^3.0",
         "laravel/pint": "^1.27",
         "orchestra/testbench": "^11.0",
-        "phpunit/phpunit": "^12.5"
+        "phpunit/phpunit": "^12.5",
+        "sandersander/composer-link": "^0.7.3"
     },
     "autoload": {
         "psr-4": {
@@ -48,5 +50,10 @@
             "@lint"
         ]
     },
-    "minimum-stability": "stable"
+    "minimum-stability": "stable",
+    "config": {
+        "allow-plugins": {
+            "sandersander/composer-link": true
+        }
+    }
 }

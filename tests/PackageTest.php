@@ -11,4 +11,12 @@ class PackageTest extends TestCase
         $this->assertSame(['web'], config('portfolio-frontend.middleware'));
         $this->assertSame('portfolio-frontend::layout', config('portfolio-frontend.layout'));
     }
+
+    public function test_default_layout_renders_pages(): void
+    {
+        $this->get('/portfolio')
+            ->assertOk()
+            ->assertSee('<title>Portfolio</title>', false)
+            ->assertSee('<main>', false);
+    }
 }
