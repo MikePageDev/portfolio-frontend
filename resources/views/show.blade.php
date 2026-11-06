@@ -1,6 +1,5 @@
 @php
-    $disk = \Illuminate\Support\Facades\Storage::disk(config('filament-portfolio.disk'));
-    $hasContact = \Illuminate\Support\Facades\Route::has('contact');
+    $disk = \Illuminate\Support\Facades\Storage::disk(config('portfolio-frontend.disk'));
 @endphp
 <x-dynamic-component :component="config('portfolio-frontend.layout')" :title="$project->title" :description="$project->summary ?: null">
     <article class="max-w-2xl mx-auto py-12 w-full">
@@ -25,7 +24,7 @@
 
         @if ($project->role)
             <section class="mb-8">
-                <h2 class="text-2xl font-bold mb-3">My role</h2>
+                <h2 class="text-2xl font-bold mb-3">{{ config('portfolio-frontend.role_heading') ?: 'Role' }}</h2>
                 <p class="text-lg">{{ $project->role }}</p>
             </section>
         @endif
@@ -55,11 +54,6 @@
             </div>
         @endif
 
-        <p class="text-lg mt-12">
-            Need something similar?
-            @if ($hasContact)
-                <a href="{{ route('contact') }}" class="underline font-semibold hover:text-neutral-600 dark:hover:text-neutral-400">Get in touch</a>.
-            @endif
-        </p>
+        <x-portfolio-frontend::contact-prompt :text="config('portfolio-frontend.case_study_contact_prompt')" link-class="underline font-semibold hover:text-neutral-600 dark:hover:text-neutral-400" wrapper-class="text-lg mt-12" />
     </article>
 </x-dynamic-component>

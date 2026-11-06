@@ -1,11 +1,16 @@
 @php
-    $disk = \Illuminate\Support\Facades\Storage::disk(config('filament-portfolio.disk'));
-    $hasContact = \Illuminate\Support\Facades\Route::has('contact');
+    $disk = \Illuminate\Support\Facades\Storage::disk(config('portfolio-frontend.disk'));
+    $title = config('portfolio-frontend.title') ?: 'Portfolio';
+    $intro = config('portfolio-frontend.intro');
+    $emptyMessage = config('portfolio-frontend.empty_message');
+    $contactPrompt = config('portfolio-frontend.index_contact_prompt');
 @endphp
-<x-dynamic-component :component="config('portfolio-frontend.layout')" title="Portfolio" description="Selected projects and case studies: Laravel applications, admin panels and backend work.">
+<x-dynamic-component :component="config('portfolio-frontend.layout')" :title="$title" :description="config('portfolio-frontend.description') ?: null">
     <section class="max-w-2xl mx-auto py-12 w-full">
-        <h1 class="text-4xl sm:text-5xl font-bold mb-4">Portfolio</h1>
-        <p class="text-lg mb-10">A selection of things I've built, with the problem each one solved and the part I played.</p>
+        <h1 class="text-4xl sm:text-5xl font-bold mb-4">{{ $title }}</h1>
+        @if ($intro)
+            <p class="text-lg mb-10">{{ $intro }}</p>
+        @endif
 
         @forelse ($projects as $project)
             <article class="py-8 border-t border-neutral-200 dark:border-neutral-700">
@@ -22,12 +27,14 @@
                 <a href="{{ route('portfolio.show', $project->slug) }}" class="font-semibold underline hover:text-neutral-600 dark:hover:text-neutral-400">Read the case study<span class="sr-only">: {{ $project->title }}</span></a>
             </article>
         @empty
-            <p class="text-lg">
-                Project write-ups are on their way.
-                @if ($hasContact)
-                    In the meantime, <a href="{{ route('contact') }}" class="underline font-semibold">get in touch</a> to ask about my work.
-                @endif
-            </p>
+            @if (filled($emptyMessage))
+                <p class="text-lg">
+                    {{ $emptyMessage }}
+                    <x-portfolio-frontend::contact-prompt :text="$contactPrompt" link-class="underline font-semibold" />
+                </p>
+            @else
+                <x-portfolio-frontend::contact-prompt :text="$contactPrompt" link-class="underline font-semibold" wrapper-class="text-lg" />
+            @endif
         @endforelse
     </section>
 </x-dynamic-component>

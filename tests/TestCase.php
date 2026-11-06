@@ -2,17 +2,19 @@
 
 namespace MikePageDev\PortfolioFrontend\Tests;
 
-use MikePageDev\FilamentPortfolio\FilamentPortfolioServiceProvider;
+use App\Models\PortfolioProject;
+use Illuminate\Support\Str;
 use MikePageDev\PortfolioFrontend\PortfolioFrontendServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
-use ReflectionClass;
+
+// The suite runs against the same model file users publish.
+require_once __DIR__.'/../stubs/PortfolioProject.php.stub';
 
 abstract class TestCase extends Orchestra
 {
     protected function getPackageProviders($app): array
     {
         return [
-            FilamentPortfolioServiceProvider::class,
             PortfolioFrontendServiceProvider::class,
         ];
     }
@@ -26,9 +28,22 @@ abstract class TestCase extends Orchestra
 
     protected function defineDatabaseMigrations(): void
     {
-        // Resolve the model package's migration from wherever Composer installed it.
-        $packageRoot = dirname((string) (new ReflectionClass(FilamentPortfolioServiceProvider::class))->getFileName(), 2);
-        $migration = include $packageRoot.'/database/migrations/create_portfolio_projects_table.php.stub';
+        $migration = include __DIR__.'/../database/migrations/create_portfolio_projects_table.php.stub';
         $migration->up();
+    }
+
+    /**
+     * @param  array<string, mixed>  $attributes
+     */
+    protected function project(array $attributes = [], bool $published = true): PortfolioProject
+    {
+        return PortfolioProject::query()->create([
+            'title' => 'A Project',
+            'slug' => 'project-'.Str::lower(Str::random(8)),
+            'summary' => 'A summary.',
+            'is_published' => $published,
+            'sort_order' => 0,
+            ...$attributes,
+        ]);
     }
 }

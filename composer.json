@@ -1,27 +1,36 @@
 {
     "name": "mikepagedev/portfolio-frontend",
-    "description": "Public portfolio and case-study pages for mikepagedev/filament-portfolio.",
+    "description": "Public portfolio and case-study pages for Laravel, with or without Filament.",
+    "keywords": [
+        "laravel",
+        "filament",
+        "portfolio",
+        "case-studies",
+        "blade"
+    ],
+    "homepage": "https://github.com/MikePageDev/portfolio-frontend",
     "type": "library",
     "license": "MIT",
-    "repositories": [
+    "authors": [
         {
-            "type": "vcs",
-            "url": "https://github.com/mikepagedev/filament-portfolio",
-            "no-api": true
+            "name": "Mike Page",
+            "homepage": "https://mikepage.dev"
         }
     ],
+    "support": {
+        "issues": "https://github.com/MikePageDev/portfolio-frontend/issues",
+        "source": "https://github.com/MikePageDev/portfolio-frontend"
+    },
     "require": {
         "php": "^8.5",
-        "mikepagedev/filament-portfolio": "@dev",
-        "illuminate/support": "^13.0",
+        "laravel/framework": "^13.0",
         "spatie/laravel-package-tools": "^1.9"
     },
     "require-dev": {
         "larastan/larastan": "^3.0",
         "laravel/pint": "^1.27",
         "orchestra/testbench": "^11.0",
-        "phpunit/phpunit": "^12.5",
-        "sandersander/composer-link": "^0.7.3"
+        "phpunit/phpunit": "^12.5"
     },
     "autoload": {
         "psr-4": {
@@ -50,10 +59,5 @@
             "@lint"
         ]
     },
-    "minimum-stability": "stable",
-    "config": {
-        "allow-plugins": {
-            "sandersander/composer-link": true
-        }
-    }
+    "minimum-stability": "stable"
 }

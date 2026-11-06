@@ -2,9 +2,8 @@
 
 namespace MikePageDev\PortfolioFrontend\Tests;
 
-use Illuminate\Support\Facades\Route;
+use App\Models\PortfolioProject;
 use Illuminate\Support\Facades\Storage;
-use MikePageDev\FilamentPortfolio\Models\Project;
 
 class PortfolioPagesTest extends TestCase
 {
@@ -23,9 +22,9 @@ class PortfolioPagesTest extends TestCase
         Storage::fake('public');
     }
 
-    private function demo(): Project
+    private function demo(): PortfolioProject
     {
-        return Project::factory()->published()->create([
+        return $this->project([
             'title' => 'Demo App',
             'slug' => 'demo-app',
             'summary' => 'Demo summary.',
@@ -43,8 +42,8 @@ class PortfolioPagesTest extends TestCase
     public function test_index_lists_published_projects_in_order_inside_the_layout(): void
     {
         $this->demo();
-        Project::factory()->published()->create(['title' => 'Earlier Project', 'slug' => 'earlier', 'sort_order' => 0]);
-        Project::factory()->create(['title' => 'Draft Project', 'slug' => 'draft']);
+        $this->project(['title' => 'Earlier Project', 'slug' => 'earlier', 'sort_order' => 0]);
+        $this->project(['title' => 'Draft Project', 'slug' => 'draft'], published: false);
 
         $this->get('/portfolio')
             ->assertOk()
@@ -60,7 +59,7 @@ class PortfolioPagesTest extends TestCase
         $this->get('/portfolio')
             ->assertOk()
             ->assertDontSee('<article', false)
-            ->assertSee('Project write-ups are on their way.');
+            ->assertSee('No projects yet.');
     }
 
     public function test_case_study_shows_all_sections(): void
@@ -80,7 +79,7 @@ class PortfolioPagesTest extends TestCase
 
     public function test_title_only_project_renders_without_empty_parts(): void
     {
-        Project::factory()->published()->create(['title' => 'Bare Project', 'slug' => 'bare', 'summary' => null]);
+        $this->project(['title' => 'Bare Project', 'slug' => 'bare', 'summary' => null]);
 
         $this->get('/portfolio/bare')
             ->assertOk()
@@ -95,7 +94,7 @@ class PortfolioPagesTest extends TestCase
 
     public function test_drafts_unknown_and_malformed_slugs_are_404(): void
     {
-        Project::factory()->create(['slug' => 'draft']);
+        $this->project(['slug' => 'draft'], published: false);
 
         $this->get('/portfolio/draft')->assertNotFound();
         $this->get('/portfolio/nope')->assertNotFound();
@@ -105,7 +104,7 @@ class PortfolioPagesTest extends TestCase
 
     public function test_project_text_is_html_escaped(): void
     {
-        Project::factory()->published()->create([
+        $this->project([
             'title' => 'Tom & Jerry <b>',
             'slug' => 'odd',
             'summary' => '<script>alert(1)</script>',
@@ -119,22 +118,14 @@ class PortfolioPagesTest extends TestCase
         $this->get('/portfolio')->assertDontSee('<script>alert(1)</script>', false);
     }
 
-    public function test_contact_links_are_omitted_without_a_contact_route(): void
+    public function test_screenshots_use_the_configured_disk(): void
     {
-        $this->demo();
+        Storage::fake('screenshots');
+        config(['portfolio-frontend.disk' => 'screenshots']);
+        $this->project(['slug' => 'pictured', 'images' => [['path' => 'a.png', 'alt' => 'A']]]);
 
-        $this->get('/portfolio/demo-app')
+        $this->get('/portfolio/pictured')
             ->assertOk()
-            ->assertSee('Need something similar?')
-            ->assertDontSee('/contact', false);
-    }
-
-    public function test_contact_links_use_the_contact_route_when_it_exists(): void
-    {
-        Route::get('/contact', fn () => 'contact')->name('contact');
-        $this->demo();
-
-        $this->get('/portfolio/demo-app')
-            ->assertSee('href="'.route('contact').'"', false);
+            ->assertSee('src="'.Storage::disk('screenshots')->url('a.png').'"', false);
     }
 }
