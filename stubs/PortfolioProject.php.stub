@@ -1,0 +1,26 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Model;
+
+#[Fillable(['title', 'slug', 'summary', 'problem', 'role', 'tech', 'case_study', 'images', 'live_url', 'source_url', 'is_published', 'sort_order'])]
+class PortfolioProject extends Model
+{
+    protected $table = 'portfolio_projects';
+
+    /**
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'tech' => 'array',
+            'case_study' => 'array',
+            'images' => 'array',
+            'is_published' => 'boolean',
+            'sort_order' => 'integer',
+        ];
+    }
+}
