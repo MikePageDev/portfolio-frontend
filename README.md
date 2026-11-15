@@ -155,6 +155,7 @@ Slugs can contain lowercase letters, numbers and hyphens.
 | `contact_route`             | `contact`                                            | Route the contact prompts link to.                                          |
 | `index_contact_prompt`      | `null`                                               | Prompt after the empty message on the index page. Left out when `null`.     |
 | `case_study_contact_prompt` | `Interested in something similar? [Get in touch].`   | Prompt at the end of a case study. Left out when `null`.                    |
+| `button_classes`            | `primary` and `secondary` both `null`                | Colour classes for the case-study buttons. `null` uses black and white.     |
 
 ### Contact prompts
 
@@ -167,6 +168,21 @@ Prompts are plain text. Put square brackets around the words that should link to
 Only the first pair of brackets becomes a link. HTML in the text is escaped, not rendered.
 
 If `contact_route` is `null`, or names a route your site doesn't have, the prompts are hidden completely.
+
+### Button colours
+
+The case-study buttons are black and white by default. To match your brand, set their colour classes in your published config:
+
+```php
+'button_classes' => [
+    // "View live site"
+    'primary' => 'bg-indigo-600 text-white hover:bg-indigo-700',
+    // "View source code", which already has a 2px border
+    'secondary' => 'border-indigo-600 hover:bg-indigo-50',
+],
+```
+
+Write the classes out in full so Tailwind can find them. It scans `config/` along with the rest of your app.
 
 ## Customising the pages
 
