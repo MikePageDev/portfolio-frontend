@@ -37,6 +37,14 @@ return [
     // Prompt after the empty message on the index page. [text] marks the link. Null leaves it out.
     'index_contact_prompt' => null,
 
+    // Colour classes for the case-study buttons: primary is "View live site", secondary is
+    // "View source code" (it already has a 2px border). Null uses the built-in black and white.
+    // Tailwind only builds classes it can see, so write them out in full here.
+    'button_classes' => [
+        'primary' => null,
+        'secondary' => null,
+    ],
+
     // Prompt at the end of a case study. [text] marks the link. Null leaves it out.
     'case_study_contact_prompt' => 'Interested in something similar? [Get in touch].',
 

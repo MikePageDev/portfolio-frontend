@@ -74,7 +74,35 @@ class PortfolioPagesTest extends TestCase
             ->assertSee('alt="Demo screenshot"', false)
             ->assertSeeInOrder(['Demo problem.', 'Demo role.', 'Demo Approach', 'Demo approach body.', 'Filament'])
             ->assertSee('href="https://demo.example.test" target="_blank" rel="noopener noreferrer"', false)
-            ->assertSee('href="https://github.com/example/demo" target="_blank" rel="noopener noreferrer"', false);
+            ->assertSee('href="https://github.com/example/demo" target="_blank" rel="noopener noreferrer"', false)
+            ->assertSee('bg-neutral-900 text-white', false);
+    }
+
+    public function test_first_screenshot_leads_and_the_rest_follow_the_write_up(): void
+    {
+        $this->project([
+            'slug' => 'gallery',
+            'problem' => 'Gallery problem.',
+            'images' => [
+                ['path' => 'one.png', 'alt' => 'First'],
+                ['path' => 'two.png', 'alt' => 'Second'],
+                ['path' => 'three.png', 'alt' => 'Third'],
+            ],
+        ]);
+
+        $this->get('/portfolio/gallery')
+            ->assertOk()
+            ->assertSeeInOrder(['alt="First"', 'Gallery problem.', 'Screenshots</h2>', 'alt="Second"', 'alt="Third"'], false);
+    }
+
+    public function test_button_classes_come_from_config(): void
+    {
+        config(['portfolio-frontend.button_classes' => ['primary' => 'brand-primary', 'secondary' => 'brand-secondary']]);
+        $this->demo();
+
+        $this->get('/portfolio/demo-app')
+            ->assertSee('brand-primary">View live site', false)
+            ->assertSee('brand-secondary">View source code', false);
     }
 
     public function test_title_only_project_renders_without_empty_parts(): void
@@ -88,6 +116,7 @@ class PortfolioPagesTest extends TestCase
             ->assertDontSee('<img', false)
             ->assertDontSee('The problem')
             ->assertDontSee('Technologies')
+            ->assertDontSee('Screenshots')
             ->assertDontSee('View live site')
             ->assertDontSee('View source code');
     }
